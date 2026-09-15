@@ -192,7 +192,12 @@ namespace Jellyfin.Plugin.MediaBar.Helpers
             PluginConfiguration config = MediaBarPlugin.Instance.Configuration;
             string version = config.VersionString.Trim();
 
-            if (PluginConfiguration.UsesEmbeddedAssets(version, config.AllowUnpinnedRefs))
+            // The plugin's own version number is what the embedded assets are; treat it as
+            // such rather than as a git ref, which may not exist as a tag (e.g. on a fork)
+            string ownVersion = MediaBarPlugin.Instance.Version.ToString();
+
+            if (PluginConfiguration.UsesEmbeddedAssets(version, config.AllowUnpinnedRefs) ||
+                string.Equals(version, ownVersion, StringComparison.OrdinalIgnoreCase))
             {
                 // Relative to /web/ so it resolves when Jellyfin is hosted under a base path
                 return "../MediaBar";
