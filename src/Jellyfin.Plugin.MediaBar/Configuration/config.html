@@ -102,17 +102,17 @@
                         <input id="numMaxPlotLength" type="number" is="emby-input" class="emby-input" data-id="numMaxPlotLength" />
                         <div class="fieldDescription">How many words should be displayed for the plot on the Media Bar? (set to -1 to use default value)</div>
                     </div>
-                    <div class="inputContainer" style="display:none;"><!-- Config variable doesn't seem to be used -->
+                    <div class="inputContainer">
                         <label class="inputLabel inputLabelUnfocused" for="numMaxMovies">Max Movies</label>
                         <label class="inputLabel inputLabel-float inputLabelUnfocused" for="numMaxMovies"></label>
                         <input id="numMaxMovies" type="number" is="emby-input" class="emby-input" data-id="numMaxMovies" />
-                        <div class="fieldDescription">? (set to -1 to use default value)</div>
+                        <div class="fieldDescription">Maximum number of movies in the loop. Together with Max TV Shows this sets the content mix: both 0 = everything, movies only when Max TV Shows is 0, and so on. (set to -1 to use default value)</div>
                     </div>
-                    <div class="inputContainer" style="display:none;"><!-- Config variable doesn't seem to be used -->
+                    <div class="inputContainer">
                         <label class="inputLabel inputLabelUnfocused" for="numMaxTvShows">Max TV Shows</label>
                         <label class="inputLabel inputLabel-float inputLabelUnfocused" for="numMaxTvShows"></label>
                         <input id="numMaxTvShows" type="number" is="emby-input" class="emby-input" data-id="numMaxTvShows" />
-                        <div class="fieldDescription">? (set to -1 to use default value)</div>
+                        <div class="fieldDescription">Maximum number of TV shows in the loop. See Max Movies. (set to -1 to use default value)</div>
                     </div>
                     <div class="inputContainer">
                         <label class="inputLabel inputLabelUnfocused" for="numMaxItems">Max Items</label>
@@ -164,6 +164,103 @@
                             </span>
                         </label>
                         <div class="fieldDescription">Sync the page backdrop with the media bar slide?</div>
+                    </div>
+                    <div class="selectContainer">
+                        <label class="selectLabel" for="selLayout">Layout</label>
+                        <select is="emby-select" id="selLayout" class="emby-select-withcolor emby-select" data-id="selLayout">
+                            <option value="">Default</option>
+                            <option value="marquee">Marquee</option>
+                            <option value="plate">Plate</option>
+                            <option value="classic">Classic</option>
+                        </select>
+                        <div class="fieldDescription">Marquee = spec line and progress rule, panel on phones. Plate = text on a tinted panel. Classic = the original look.</div>
+                    </div>
+                    <div class="inputContainer">
+                        <label class="inputLabel inputLabelUnfocused" for="txtLibraries">Libraries</label>
+                        <label class="inputLabel inputLabel-float inputLabelUnfocused" for="txtLibraries"></label>
+                        <input id="txtLibraries" type="text" is="emby-input" class="emby-input" data-id="txtLibraries" />
+                        <div class="fieldDescription">Comma-separated library display names the media bar may draw from, e.g. <code>Movies, 4K Movies</code>. Leave empty for all libraries.</div>
+                    </div>
+                    <div class="checkboxContainer checkboxContainer-withDescription" style="margin-bottom: 1.5em;">
+                        <label class="emby-checkbox-label">
+                            <input data-id="chkPauseOnHover" id="chkPauseOnHover" type="checkbox" is="emby-checkbox" class="emby-checkbox">
+                            <span class="checkboxLabel">Pause On Hover?</span>
+                            <span class="checkboxOutline">
+                                <span class="material-icons checkboxIcon checkboxIcon-checked check" aria-hidden="true"></span>
+                                <span class="material-icons checkboxIcon checkboxIcon-unchecked " aria-hidden="true"></span>
+                            </span>
+                        </label>
+                        <div class="fieldDescription">Hold the rotation while the pointer is over the media bar.</div>
+                    </div>
+                    <div class="checkboxContainer checkboxContainer-withDescription" style="margin-bottom: 1.5em;">
+                        <label class="emby-checkbox-label">
+                            <input data-id="chkAllowTrailersOnTouch" id="chkAllowTrailersOnTouch" type="checkbox" is="emby-checkbox" class="emby-checkbox">
+                            <span class="checkboxLabel">Trailers On Phones?</span>
+                            <span class="checkboxOutline">
+                                <span class="material-icons checkboxIcon checkboxIcon-checked check" aria-hidden="true"></span>
+                                <span class="material-icons checkboxIcon checkboxIcon-unchecked " aria-hidden="true"></span>
+                            </span>
+                        </label>
+                        <div class="fieldDescription">Also play trailers on the small/touch layout.</div>
+                    </div>
+                    <div class="inputContainer">
+                        <label class="inputLabel inputLabelUnfocused" for="numTrailerVolume">Trailer Volume</label>
+                        <label class="inputLabel inputLabel-float inputLabelUnfocused" for="numTrailerVolume"></label>
+                        <input id="numTrailerVolume" type="number" min="-1" max="100" is="emby-input" class="emby-input" data-id="numTrailerVolume" />
+                        <div class="fieldDescription">Volume (0-100) once a trailer is unmuted. Trailers always start muted. (set to -1 to use default value)</div>
+                    </div>
+                    <div class="inputContainer">
+                        <label class="inputLabel inputLabelUnfocused" for="txtTrailerLibraries">Trailer Libraries</label>
+                        <label class="inputLabel inputLabel-float inputLabelUnfocused" for="txtTrailerLibraries"></label>
+                        <input id="txtTrailerLibraries" type="text" is="emby-input" class="emby-input" data-id="txtTrailerLibraries" />
+                        <div class="fieldDescription">Comma-separated library display names allowed to autoplay trailers. Leave empty to allow trailers wherever they are enabled.</div>
+                    </div>
+                    <div class="checkboxContainer checkboxContainer-withDescription" style="margin-bottom: 1.5em;">
+                        <label class="emby-checkbox-label">
+                            <input data-id="chkRememberOrderForSession" id="chkRememberOrderForSession" type="checkbox" is="emby-checkbox" class="emby-checkbox">
+                            <span class="checkboxLabel">Resume Where I Left Off?</span>
+                            <span class="checkboxOutline">
+                                <span class="material-icons checkboxIcon checkboxIcon-checked check" aria-hidden="true"></span>
+                                <span class="material-icons checkboxIcon checkboxIcon-unchecked " aria-hidden="true"></span>
+                            </span>
+                        </label>
+                        <div class="fieldDescription">Keep the shuffled order and position for the browser session, so returning to the home page resumes the loop.</div>
+                    </div>
+                    <div class="checkboxContainer checkboxContainer-withDescription" style="margin-bottom: 1.5em;">
+                        <label class="emby-checkbox-label">
+                            <input data-id="chkRespectDataSaver" id="chkRespectDataSaver" type="checkbox" is="emby-checkbox" class="emby-checkbox">
+                            <span class="checkboxLabel">Respect Data Saver?</span>
+                            <span class="checkboxOutline">
+                                <span class="material-icons checkboxIcon checkboxIcon-checked check" aria-hidden="true"></span>
+                                <span class="material-icons checkboxIcon checkboxIcon-unchecked " aria-hidden="true"></span>
+                            </span>
+                        </label>
+                        <div class="fieldDescription">Skip trailers when the browser reports a metered connection.</div>
+                    </div>
+
+                    <h3 style="margin-top: 2em;">User Settings</h3>
+                    <div class="fieldDescription" style="margin-bottom: 1em;">The media bar shows a gear button that lets each user tweak the options above for their own browser. Use these to control that.</div>
+                    <div class="checkboxContainer checkboxContainer-withDescription" style="margin-bottom: 1.5em;">
+                        <label class="emby-checkbox-label">
+                            <input data-id="chkEnforceForAllUsers" id="chkEnforceForAllUsers" type="checkbox" is="emby-checkbox" class="emby-checkbox">
+                            <span class="checkboxLabel">Enforce these settings for all users</span>
+                            <span class="checkboxOutline">
+                                <span class="material-icons checkboxIcon checkboxIcon-checked check" aria-hidden="true"></span>
+                                <span class="material-icons checkboxIcon checkboxIcon-unchecked " aria-hidden="true"></span>
+                            </span>
+                        </label>
+                        <div class="fieldDescription">Lock every option in the user settings panel to the values configured here. Users' saved overrides are ignored and the options show as disabled.</div>
+                    </div>
+                    <div class="checkboxContainer checkboxContainer-withDescription" style="margin-bottom: 1.5em;">
+                        <label class="emby-checkbox-label">
+                            <input data-id="chkHideUserSettingsButton" id="chkHideUserSettingsButton" type="checkbox" is="emby-checkbox" class="emby-checkbox">
+                            <span class="checkboxLabel">Hide the user settings button</span>
+                            <span class="checkboxOutline">
+                                <span class="material-icons checkboxIcon checkboxIcon-checked check" aria-hidden="true"></span>
+                                <span class="material-icons checkboxIcon checkboxIcon-unchecked " aria-hidden="true"></span>
+                            </span>
+                        </label>
+                        <div class="fieldDescription">Remove the gear button from the media bar entirely.</div>
                     </div>
                 </div>
             </div>
@@ -234,6 +331,16 @@
                             SlideAnimationEnabled: document.querySelector("[data-id=chkSlideAnimationEnabled]").checked,
                             EnableTrailers: document.querySelector("[data-id=chkEnableTrailers]").checked,
                             SyncPageBackdrop: document.querySelector("[data-id=chkSyncPageBackdrop]").checked,
+                            Layout: document.querySelector("[data-id=selLayout]").value,
+                            Libraries: document.querySelector("[data-id=txtLibraries]").value,
+                            TrailerLibraries: document.querySelector("[data-id=txtTrailerLibraries]").value,
+                            PauseOnHover: document.querySelector("[data-id=chkPauseOnHover]").checked,
+                            AllowTrailersOnTouch: document.querySelector("[data-id=chkAllowTrailersOnTouch]").checked,
+                            TrailerVolume: parseInt(document.querySelector("[data-id=numTrailerVolume]").value, 10),
+                            RememberOrderForSession: document.querySelector("[data-id=chkRememberOrderForSession]").checked,
+                            RespectDataSaver: document.querySelector("[data-id=chkRespectDataSaver]").checked,
+                            EnforceForAllUsers: document.querySelector("[data-id=chkEnforceForAllUsers]").checked,
+                            HideUserSettingsButton: document.querySelector("[data-id=chkHideUserSettingsButton]").checked,
                         }
                     };
 
@@ -269,6 +376,17 @@
                             document.querySelector("[data-id=numFadeTransitionDuration]").value = config.WebConfig.FadeTransitionDuration;
                             document.querySelector("[data-id=chkSlideAnimationEnabled]").checked = config.WebConfig.SlideAnimationEnabled;
                             document.querySelector("[data-id=chkEnableTrailers]").checked = config.WebConfig.EnableTrailers;
+                            document.querySelector("[data-id=chkSyncPageBackdrop]").checked = config.WebConfig.SyncPageBackdrop;
+                            document.querySelector("[data-id=selLayout]").value = config.WebConfig.Layout || "";
+                            document.querySelector("[data-id=txtLibraries]").value = config.WebConfig.Libraries || "";
+                            document.querySelector("[data-id=txtTrailerLibraries]").value = config.WebConfig.TrailerLibraries || "";
+                            document.querySelector("[data-id=chkPauseOnHover]").checked = config.WebConfig.PauseOnHover;
+                            document.querySelector("[data-id=chkAllowTrailersOnTouch]").checked = config.WebConfig.AllowTrailersOnTouch;
+                            document.querySelector("[data-id=numTrailerVolume]").value = config.WebConfig.TrailerVolume;
+                            document.querySelector("[data-id=chkRememberOrderForSession]").checked = config.WebConfig.RememberOrderForSession;
+                            document.querySelector("[data-id=chkRespectDataSaver]").checked = config.WebConfig.RespectDataSaver;
+                            document.querySelector("[data-id=chkEnforceForAllUsers]").checked = config.WebConfig.EnforceForAllUsers;
+                            document.querySelector("[data-id=chkHideUserSettingsButton]").checked = config.WebConfig.HideUserSettingsButton;
                         })
                         .catch(function (error) {
                             console.error(error);

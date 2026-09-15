@@ -9,6 +9,7 @@ using MediaBrowser.Controller.Entities.TV;
 using MediaBrowser.Controller.Library;
 using MediaBrowser.Controller.Playlists;
 using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
 
 namespace Jellyfin.Plugin.MediaBar.Helpers
 {
@@ -97,11 +98,93 @@ namespace Jellyfin.Plugin.MediaBar.Helpers
 
             string importedHtml = reader
                 .ReadToEnd()
-                .Replace("{{AssetBaseUrl}}", ResolveAssetBaseUrl());
+                .Replace("{{AssetBaseUrl}}", ResolveAssetBaseUrl())
+                .Replace("{{MediaBarConfig}}", BuildMediaBarConfigJson())
+                .Replace("{{UserSettingsStyle}}", MediaBarPlugin.Instance.Configuration.WebConfig.HideUserSettingsButton
+                    ? "<style>#slides-container .ss-settings-toggle { display: none !important; }</style>\n"
+                    : string.Empty);
 
-            string regex = Regex.Replace(payload.Contents!, "(</head>)", $"{importedHtml}$1");
+            // Regex.Replace treats "$" in the replacement as a group reference; the config
+            // JSON can legitimately contain one, so substitute with a match evaluator.
+            string regex = Regex.Replace(payload.Contents!, "</head>", _ => $"{importedHtml}</head>");
 
             return regex;
+        }
+
+        // Keys the frontend exposes in its per-user settings panel (slideshowpure.js SettingsPanel.fields)
+        private static readonly string[] s_userSettingKeys =
+        {
+            "layout", "maxMovies", "maxSeries", "libraries", "shuffleInterval",
+            "slideAnimationEnabled", "syncPageBackdrop", "pauseOnHover", "enableTrailers",
+            "allowTrailersOnTouch", "trailerVolume", "trailerLibraries",
+            "rememberOrderForSession", "respectDataSaver",
+        };
+
+        /// <summary>
+        /// Serialises the admin WebConfig as the object slideshowpure.js reads from
+        /// window.MediaBarConfig at startup. It is applied as a trusted source with -1 as
+        /// the "unset" sentinel, and any key listed in "lock" ignores per-user overrides.
+        /// </summary>
+        private static string BuildMediaBarConfigJson()
+        {
+            WebConfig web = MediaBarPlugin.Instance.Configuration.WebConfig;
+
+            Dictionary<string, object?> config = new Dictionary<string, object?>
+            {
+                ["shuffleInterval"] = web.ShuffleInterval,
+                ["retryInterval"] = web.RetryInterval,
+                ["minSwipeDistance"] = web.MinSwipeDistance,
+                ["loadingCheckInterval"] = web.LoadingCheckInterval,
+                ["maxPlotLength"] = web.MaxPlotLength,
+                ["maxMovies"] = web.MaxMovies,
+                ["maxSeries"] = web.MaxTvShows,
+                ["maxItems"] = web.MaxItems,
+                ["preloadCount"] = web.PreloadCount,
+                ["fadeTransitionDuration"] = web.FadeTransitionDuration,
+                ["trailerVolume"] = web.TrailerVolume,
+                ["slideAnimationEnabled"] = web.SlideAnimationEnabled,
+                ["syncPageBackdrop"] = web.SyncPageBackdrop,
+                ["enableTrailers"] = web.EnableTrailers,
+                ["pauseOnHover"] = web.PauseOnHover,
+                ["allowTrailersOnTouch"] = web.AllowTrailersOnTouch,
+                ["rememberOrderForSession"] = web.RememberOrderForSession,
+                ["respectDataSaver"] = web.RespectDataSaver,
+                ["ImageSvgs"] = web.ImageSvgs,
+            };
+
+            if (!string.IsNullOrWhiteSpace(web.Layout))
+            {
+                config["layout"] = web.Layout.Trim();
+            }
+
+            string[] libraries = SplitList(web.Libraries);
+            if (libraries.Length > 0)
+            {
+                config["libraries"] = libraries;
+            }
+
+            string[] trailerLibraries = SplitList(web.TrailerLibraries);
+            if (trailerLibraries.Length > 0)
+            {
+                config["trailerLibraries"] = trailerLibraries;
+            }
+
+            if (web.EnforceForAllUsers)
+            {
+                config["lock"] = s_userSettingKeys;
+            }
+
+            // Escape HTML so the JSON is safe to embed inside a <script> element
+            return JsonConvert.SerializeObject(config, new JsonSerializerSettings
+            {
+                StringEscapeHandling = StringEscapeHandling.EscapeHtml,
+            });
+        }
+
+        private static string[] SplitList(string? value)
+        {
+            return (value ?? string.Empty)
+                .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
         }
 
         private static string ResolveAssetBaseUrl()

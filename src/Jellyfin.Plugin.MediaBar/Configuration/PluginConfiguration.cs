@@ -71,6 +71,42 @@ namespace Jellyfin.Plugin.MediaBar.Configuration
         public bool SyncPageBackdrop { get; set; } = false;
 
         public bool EnableTrailers { get; set; } = true;
+
+        /// <summary>
+        /// "marquee", "plate" or "classic". Empty uses the frontend default.
+        /// </summary>
+        public string Layout { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Comma-separated library display names the bar may draw from. Empty means all.
+        /// </summary>
+        public string Libraries { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Comma-separated library display names allowed to autoplay trailers. Empty means wherever trailers are enabled.
+        /// </summary>
+        public string TrailerLibraries { get; set; } = string.Empty;
+
+        public bool PauseOnHover { get; set; } = true;
+
+        public bool AllowTrailersOnTouch { get; set; } = false;
+
+        public int TrailerVolume { get; set; } = -1;
+
+        public bool RememberOrderForSession { get; set; } = true;
+
+        public bool RespectDataSaver { get; set; } = true;
+
+        /// <summary>
+        /// When true, every option exposed in the media bar's per-user settings panel is
+        /// locked to the values above and users' local overrides are ignored.
+        /// </summary>
+        public bool EnforceForAllUsers { get; set; } = false;
+
+        /// <summary>
+        /// When true, the per-user settings (gear) button is not shown on the media bar.
+        /// </summary>
+        public bool HideUserSettingsButton { get; set; } = false;
     }
 
     public class ImageSvgs
