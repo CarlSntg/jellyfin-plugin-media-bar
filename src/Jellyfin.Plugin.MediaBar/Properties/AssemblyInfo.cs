@@ -5,4 +5,4 @@ using Jellyfin.Plugin.MediaBar.Attributes;
 [assembly: AssemblyProduct("Jellyfin.Plugins.MediaBar")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyTitle("Jellyfin.Plugins.MediaBar")]
-[assembly: AssemblyVersion("3.0.1.0")]
+[assembly: AssemblyVersion("3.0.1.1")]
